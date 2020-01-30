@@ -1,0 +1,70 @@
+<?php
+
+$request_headers = getallheaders();
+if($_SERVER['REQUEST_METHOD'] !=="POST"){
+   http_response_code(502);
+   die;
+}
+
+if( !in_array($request_headers['Host'],["192.168.33.23","Mckodev.attendout.com"]) ){
+  http_response_code(502);
+  die;
+}
+
+
+$json = file_get_contents('php://input');
+
+// Converts it into a PHP object
+$data = json_decode($json,true);
+// die(var_dump($data));
+
+if(!isset($data['data']) || !isset($data['where'])) {
+    http_response_code(400);
+    die();
+}
+
+$columnWhere = $data['where'];
+$table = $data['data'];
+// die(var_dump($data));
+$result = [];
+$vall = formatWhere($columnWhere);
+// die($vall);
+try{
+
+// $what = getVal($parameters);
+
+  // var_dump($parameters);
+  $sql = sprintf('SELECT * FROM %s',
+      $table
+  );
+
+  if(count($columnWhere) > 0){
+      $sql .= " WHERE ".$vall;
+  }
+
+  // die(var_dump($sql));
+$stmt =  $conn->prepare($sql);
+$newt = $columnWhere;
+// die(var_dump($newt));
+
+if(count($columnWhere) > 0){
+$stmt->execute($newt);
+}else{
+  $stmt->execute();
+}
+
+// $result['data'] = [];
+while($row = $stmt->fetch(PDO::FETCH_BOTH)){
+  $result[] = $row;
+}
+$result["success"] = true;
+
+} catch (PDOException $e) {
+  die($e);
+    http_response_code(409);
+    $result["error"] = true;
+    die;
+}
+
+$res = json_encode($result);
+echo $res;
