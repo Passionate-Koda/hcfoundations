@@ -3,6 +3,7 @@
 define("APP_PATH", dirname(dirname(__FILE__)));
 #load database
 #load Controllers(functions)
+include APP_PATH."/.env/config.php";
 require APP_PATH."/demo_models/model.php";
 require APP_PATH."/v1/controllers/controller.php";
 require APP_PATH."/demo_controllers/controller.php";

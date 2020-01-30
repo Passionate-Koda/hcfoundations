@@ -1,7 +1,7 @@
 <?php
-     define("DBNAME", 'mckodevc_demo');
-     define("DBUSER", 'root');
-     define("DBPASS", 'vagrant');
+define("DBNAME", getenv('DB_NAME'));
+ define("DBUSER", getenv('DB_USER'));
+ define("DBPASS", getenv('DB_PASSWORD'));
 
          try{
 
